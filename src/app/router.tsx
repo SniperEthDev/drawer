@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppShell } from "../components/layout/AppShell";
 import { SetupPage } from "../features/setup/SetupPage";
 import { ConsolePage } from "../features/game/ConsolePage";

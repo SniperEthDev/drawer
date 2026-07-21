@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import { GameSession, AuditEvent, Winner, ImportRecord, BingoCard, GameSettings } from "../domain/bingo/types";
+import { GameSession, AuditEvent, Winner, ImportRecord, BingoCard } from "../domain/bingo/types";
 
 export class BulltechDrawerDB extends Dexie {
   sessions!: Table<GameSession, string>;

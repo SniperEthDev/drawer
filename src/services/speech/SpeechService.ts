@@ -136,7 +136,6 @@ export class SpeechService {
         resolve();
       };
 
-      this.activeUtterance = utterance;
       this.synth.speak(utterance);
     });
   }

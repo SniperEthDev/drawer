@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { useNavigate } from "react-router-dom";
-import { Play, Pause, RotateCw, Trophy, FileSpreadsheet, Eye, ShieldAlert, Monitor, Volume2, Search, X } from "lucide-react";
+import { Play, Pause, RotateCw, Trophy, ShieldAlert, Volume2, Search, X } from "lucide-react";
 import { BallSphere } from "../../components/ui/BallSphere";
 import { CountdownRing } from "../../components/ui/CountdownRing";
 import { AutoDrawScheduler } from "../../services/scheduler/AutoDrawScheduler";
-import { getBingoLetter } from "../../domain/bingo/ballOrder";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../../components/ui/Dialog";
 import { useToast } from "../../components/feedback/ToastProvider";
 import { cn } from "../../lib/cn";
@@ -22,7 +21,6 @@ export const ConsolePage: React.FC = () => {
   const announceCurrentBall = useGameStore((state) => state.announceCurrentBall);
   const registerWinner = useGameStore((state) => state.registerWinner);
   const finishSession = useGameStore((state) => state.finishSession);
-  const updateSettings = useGameStore((state) => state.updateSettings);
 
   // Operator UI states
   const [boardSearch, setBoardSearch] = useState("");

@@ -44,7 +44,6 @@ export const SetupPage: React.FC = () => {
     const loadVoices = () => {
       const v = SpeechService.getAvailableVoices();
       if (v.length > 0) {
-        setVoicesLoaded(true);
         const saved = SpeechService.getSelectedVoiceName() || "";
         setSelectedVoice(saved || v[0].name);
       }

@@ -13,7 +13,6 @@ interface BallSphereProps {
 export const BallSphere: React.FC<BallSphereProps> = ({
   letter,
   number,
-  sequence,
   isDrawing = false,
   className
 }) => {
