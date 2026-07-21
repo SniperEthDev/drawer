@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { getBingoLetter, secureRandomInt, createSecureBallOrder } from "../bingo/ballOrder";
+import { getBingoLetter, secureRandomInt, createSecureBallOrder } from "../domain/bingo/ballOrder";
 
 describe("Bingo Random and Orders", () => {
   it("determines correct letters for all ranges", () => {
