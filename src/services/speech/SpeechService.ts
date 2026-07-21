@@ -99,10 +99,10 @@ export class SpeechService {
       this.synth.cancel();
 
       const numWords = numberToWordsES(num);
-      let text = `Letra ${letter}, ${numWords}.`;
+      let text = `${letter}, ${numWords}.`;
 
       if (format === "numero_letra") {
-        text = `Bola número ${numWords}, letra ${letter}.`;
+        text = `${numWords}, letra ${letter}.`;
       } else if (format === "ha_salido") {
         text = `Ha salido la ${letter}, ${numWords}.`;
       } else if (format === "corto") {
