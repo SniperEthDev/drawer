@@ -1,5 +1,5 @@
 import React from "react";
-import { HelpCircle, Keyboard, Award, ShieldAlert, BookOpen } from "lucide-react";
+import { HelpCircle, Keyboard, ShieldAlert, BookOpen } from "lucide-react";
 
 export const HelpPage: React.FC = () => {
   const keyboardShortcuts = [

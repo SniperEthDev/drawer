@@ -3,7 +3,6 @@ import { BingoLetter } from "../../domain/bingo/types";
 
 export class SpeechService {
   private static synth = typeof window !== "undefined" ? window.speechSynthesis : null;
-  private static activeUtterance: SpeechSynthesisUtterance | null = null;
   private static currentVoiceName: string | null = localStorage.getItem("bt_selected_voice");
 
   static isSupported(): boolean {

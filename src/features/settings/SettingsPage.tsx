@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { SpeechService } from "../../services/speech/SpeechService";
 import { WakeLockService } from "../../services/wakeLock/WakeLockService";
-import { Settings, Volume2, Shield, Eye, RefreshCw } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useToast } from "../../components/feedback/ToastProvider";
 
 export const SettingsPage: React.FC = () => {

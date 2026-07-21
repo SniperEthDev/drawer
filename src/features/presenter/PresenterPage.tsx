@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { BallSphere } from "../../components/ui/BallSphere";
-import { getBingoLetter } from "../../domain/bingo/ballOrder";
 import { cn } from "../../lib/cn";
 
 export const PresenterPage: React.FC = () => {

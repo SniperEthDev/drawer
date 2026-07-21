@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useGameStore } from "../../store/useGameStore";
-import { Trophy, Clock, Award, Trash2 } from "lucide-react";
+import { Trophy, Clock, Trash2 } from "lucide-react";
 import { db } from "../../db/database";
 import { cn } from "../../lib/cn";
 

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useGameStore } from "../../store/useGameStore";
-import { db } from "../../db/database";
 import { useNavigate } from "react-router-dom";
-import { Play, Volume2, ShieldAlert, Award, FileSpreadsheet, Plus, Trash2 } from "lucide-react";
+import { Volume2, ShieldAlert, Plus, Trash2 } from "lucide-react";
 import { CustomPrize, GameSettings } from "../../domain/bingo/types";
 import { SpeechService } from "../../services/speech/SpeechService";
-import { cn } from "../../lib/cn";
 
 export const SetupPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,8 +20,6 @@ export const SetupPage: React.FC = () => {
   const [voiceRate, setVoiceRate] = useState(0.95);
   const [voicePitch, setVoicePitch] = useState(1.0);
   const [voiceVolume, setVoiceVolume] = useState(1.0);
-  const [repeatAnnouncement, setRepeatAnnouncement] = useState(false);
-  const [winnerVoice, setWinnerVoice] = useState(true);
   const [soundsEnabled, setSoundsEnabled] = useState(true);
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
   const [wakeLock, setWakeLock] = useState(true);
@@ -34,7 +30,6 @@ export const SetupPage: React.FC = () => {
   
   // Voice test button state
   const [testActive, setTestActive] = useState(false);
-  const [voicesLoaded, setVoicesLoaded] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState("");
 
   useEffect(() => {
@@ -107,8 +102,8 @@ export const SetupPage: React.FC = () => {
       voiceRate,
       voicePitch,
       voiceVolume,
-      repeatAnnouncement,
-      winnerVoiceAnnouncement: winnerVoice,
+      repeatAnnouncement: false,
+      winnerVoiceAnnouncement: true,
       soundsEnabled,
       vibrationEnabled,
       wakeLockEnabled: wakeLock,

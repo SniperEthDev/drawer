@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { GameSession, CalledBall, Winner, GameSettings, GameStatus, AuditEvent, BingoLetter } from "../domain/bingo/types";
+import { GameSession, CalledBall, Winner, GameSettings, GameStatus, AuditEvent } from "../domain/bingo/types";
 import { db } from "../db/database";
 import { canTransition, canDrawNextBall, canPauseGame, canResumeGame, canRegisterClaim, canFinishGame } from "../domain/game/stateMachine";
 import { createSecureBallOrder, getBingoLetter, createOrderCommitment } from "../domain/bingo/ballOrder";

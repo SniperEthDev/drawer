@@ -3,7 +3,7 @@ import { db } from "../../db/database";
 import { GameSession, AuditEvent } from "../../domain/bingo/types";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useGameStore } from "../../store/useGameStore";
-import { History, Eye, Download, Trash2, Calendar, ClipboardList } from "lucide-react";
+import { History, Download, Trash2, Calendar, ClipboardList } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { useToast } from "../../components/feedback/ToastProvider";
