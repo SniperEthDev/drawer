@@ -12,8 +12,6 @@ export const SetupPage: React.FC = () => {
 
   // Form states
   const [eventName, setEventName] = useState("BINGO MI SUERTE");
-  const [operatorName, setOperatorName] = useState("");
-  const [roomName, setRoomName] = useState("");
   const [drawMode, setDrawMode] = useState<"MANUAL" | "SEMI_AUTOMATIC" | "AUTOMATIC">("MANUAL");
   const [delay, setDelay] = useState(5);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
@@ -84,15 +82,10 @@ export const SetupPage: React.FC = () => {
 
   const handlePrepare = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!operatorName.trim()) {
-      alert("Por favor, ingresa el nombre del operador.");
-      return;
-    }
 
     const settings: GameSettings = {
       eventName,
-      operatorName,
-      roomName: roomName.trim() || undefined,
+      operatorName: "Sistema",
       mode: drawMode,
       automaticDelaySeconds: delay,
       voiceEnabled,
@@ -125,35 +118,14 @@ export const SetupPage: React.FC = () => {
         {/* Event Setup */}
         <section className="glass-panel p-6 rounded-2xl space-y-4">
           <h2 className="text-lg font-bold font-tech text-primary border-b border-border pb-2">Información del Evento</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-text-secondary mb-1.5">Nombre del Evento *</label>
+              <label className="block text-xs font-semibold text-text-secondary mb-1.5">Nombre del Bingo *</label>
               <input
                 type="text"
                 required
                 value={eventName}
                 onChange={(e) => setEventName(e.target.value)}
-                className="w-full h-11 px-4 bg-app-background-soft border border-border rounded-xl text-text-primary focus:outline-none focus:border-primary text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-text-secondary mb-1.5">Operador de Turno *</label>
-              <input
-                type="text"
-                required
-                placeholder="Nombre del operador"
-                value={operatorName}
-                onChange={(e) => setOperatorName(e.target.value)}
-                className="w-full h-11 px-4 bg-app-background-soft border border-border rounded-xl text-text-primary focus:outline-none focus:border-primary text-sm"
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-xs font-semibold text-text-secondary mb-1.5">Sala o Mesa (Opcional)</label>
-              <input
-                type="text"
-                placeholder="Ej. Mesa Principal, Sala A"
-                value={roomName}
-                onChange={(e) => setRoomName(e.target.value)}
                 className="w-full h-11 px-4 bg-app-background-soft border border-border rounded-xl text-text-primary focus:outline-none focus:border-primary text-sm"
               />
             </div>
@@ -164,17 +136,17 @@ export const SetupPage: React.FC = () => {
         <section className="glass-panel p-6 rounded-2xl space-y-4">
           <h2 className="text-lg font-bold font-tech text-primary border-b border-border pb-2">Modo de Extracción</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <label className={`flex flex-col p-4 rounded-xl border cursor-pointer transition-all duration-200 ${drawMode === "MANUAL" ? "border-primary bg-primary/5" : "border-border bg-app-background-soft"}`}>
+            <label className={`flex flex-col p-4 rounded-xl border cursor-pointer transition-all duration-200 ${drawMode === "MANUAL" ? "border-green-500 bg-green-500/10" : "border-border bg-app-background-soft"}`}>
               <input type="radio" name="drawMode" checked={drawMode === "MANUAL"} onChange={() => setDrawMode("MANUAL")} className="sr-only" />
               <span className="font-bold text-sm text-text-primary mb-1">Manual</span>
               <span className="text-xs text-text-secondary">El operador hace clic en extraer bola una a una.</span>
             </label>
-            <label className={`flex flex-col p-4 rounded-xl border cursor-pointer transition-all duration-200 ${drawMode === "SEMI_AUTOMATIC" ? "border-primary bg-primary/5" : "border-border bg-app-background-soft"}`}>
+            <label className={`flex flex-col p-4 rounded-xl border cursor-pointer transition-all duration-200 ${drawMode === "SEMI_AUTOMATIC" ? "border-green-500 bg-green-500/10" : "border-border bg-app-background-soft"}`}>
               <input type="radio" name="drawMode" checked={drawMode === "SEMI_AUTOMATIC"} onChange={() => setDrawMode("SEMI_AUTOMATIC")} className="sr-only" />
               <span className="font-bold text-sm text-text-primary mb-1">Semiautomático</span>
               <span className="text-xs text-text-secondary">Prepara la bola y espera a que el operador autorice mostrarla.</span>
             </label>
-            <label className={`flex flex-col p-4 rounded-xl border cursor-pointer transition-all duration-200 ${drawMode === "AUTOMATIC" ? "border-primary bg-primary/5" : "border-border bg-app-background-soft"}`}>
+            <label className={`flex flex-col p-4 rounded-xl border cursor-pointer transition-all duration-200 ${drawMode === "AUTOMATIC" ? "border-green-500 bg-green-500/10" : "border-border bg-app-background-soft"}`}>
               <input type="radio" name="drawMode" checked={drawMode === "AUTOMATIC"} onChange={() => setDrawMode("AUTOMATIC")} className="sr-only" />
               <span className="font-bold text-sm text-text-primary mb-1">Automático</span>
               <span className="text-xs text-text-secondary">Sorteo automático con intervalos configurables de tiempo.</span>

@@ -16,7 +16,7 @@ export const PresenterPage: React.FC = () => {
     return (
       <div className="min-h-screen bg-app-background flex flex-col items-center justify-center p-6 text-center">
         <div className="max-w-md w-full glass-panel p-8 rounded-2xl space-y-4">
-          <img src="/brand/bulltech-drawer-logo.svg" alt="BT" className="w-16 h-16 mx-auto animate-pulse" />
+          <img src="/brand/logo-bulltech-white.webp" alt="BT" className="w-16 h-16 mx-auto animate-pulse object-contain" />
           <h1 className="text-xl font-bold font-tech text-text-primary">MODO PRESENTADOR</h1>
           <p className="text-text-secondary text-sm">Esperando que se inicie o configure una partida activa...</p>
         </div>
@@ -33,7 +33,7 @@ export const PresenterPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border pb-4">
         <div className="flex items-center gap-3">
-          <img src="/brand/bulltech-drawer-logo.svg" alt="Logo" className="w-10 h-10" />
+          <img src="/brand/logo-bulltech-white.webp" alt="Logo" className="w-10 h-10 object-contain" />
           <div>
             <h1 className="text-lg font-bold font-tech text-text-primary uppercase tracking-wider">{session.eventName}</h1>
             <span className="text-xs text-primary font-tech tracking-widest uppercase">MODO PRESENTADOR (Solo lectura)</span>

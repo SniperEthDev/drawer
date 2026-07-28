@@ -33,6 +33,13 @@ export const ConsolePage: React.FC = () => {
   const [lineModalOpen, setLineModalOpen] = useState(false);
   const [bingoModalOpen, setBingoModalOpen] = useState(false);
   const [revokeModalOpen, setRevokeModalOpen] = useState(false);
+
+  // States for Line save simulator & Bingo finished dialog
+  const [isSavingLine, setIsSavingLine] = useState(false);
+  const [saveProgress, setSaveProgress] = useState(0);
+  const [lineSaveComplete, setLineSaveComplete] = useState(false);
+  const [gameFinishedModalOpen, setGameFinishedModalOpen] = useState(false);
+  const discardSession = useGameStore((state) => state.discardSession);
   
   // Dialog Inputs
   const [winnerName, setWinnerName] = useState("");
@@ -146,33 +153,61 @@ export const ConsolePage: React.FC = () => {
     // Force pause first
     await pauseGame("Reclamación de premio");
 
-    await registerWinner({
-      type,
-      name: winnerName,
-      cardSeries: cardSeries.trim() || undefined,
-      cardSerial: cardSerial.trim() || undefined,
-      winningBallNumber: lastBall.number,
-      winningBallLetter: lastBall.letter,
-      verificationStatus: "MANUAL",
-      notes: winnerNotes.trim() || undefined
-    });
-
-    setWinnerName("");
-    setCardSeries("");
-    setCardSerial("");
-    setWinnerNotes("");
-    
     if (type === "LINE") {
-      setLineModalOpen(false);
+      setIsSavingLine(true);
+      setSaveProgress(0);
+      setLineSaveComplete(false);
+
+      const duration = 1500; // 1.5s
+      const intervalTime = 50;
+      const steps = duration / intervalTime;
+      let currentStep = 0;
+
+      const interval = setInterval(async () => {
+        currentStep++;
+        const prog = Math.min((currentStep / steps) * 100, 100);
+        setSaveProgress(prog);
+
+        if (currentStep >= steps) {
+          clearInterval(interval);
+          await registerWinner({
+            type,
+            name: winnerName,
+            cardSeries: cardSeries.trim() || undefined,
+            cardSerial: cardSerial.trim() || undefined,
+            winningBallNumber: lastBall.number,
+            winningBallLetter: lastBall.letter,
+            verificationStatus: "MANUAL",
+            notes: winnerNotes.trim() || undefined
+          });
+          setLineSaveComplete(true);
+          setIsSavingLine(false);
+          showToast("Ganador de línea registrado correctamente", "success");
+        }
+      }, intervalTime);
     } else {
+      await registerWinner({
+        type,
+        name: winnerName,
+        cardSeries: cardSeries.trim() || undefined,
+        cardSerial: cardSerial.trim() || undefined,
+        winningBallNumber: lastBall.number,
+        winningBallLetter: lastBall.letter,
+        verificationStatus: "MANUAL",
+        notes: winnerNotes.trim() || undefined
+      });
+
+      setWinnerName("");
+      setCardSeries("");
+      setCardSerial("");
+      setWinnerNotes("");
       setBingoModalOpen(false);
-      // Ask to finalize session on Bingo
-      if (confirm("¿Deseas finalizar la partida actual al otorgar este Bingo?")) {
-        await finishSession();
-        navigate("/history");
-      }
+
+      // Finish session and show custom finished dialog
+      await finishSession();
+      setGameFinishedModalOpen(true);
+      showToast("Bingo registrado correctamente", "success");
     }
-    showToast("Ganador registrado correctamente", "success");
   };
 
   return (
@@ -446,58 +481,123 @@ export const ConsolePage: React.FC = () => {
       {/* DIALOGS AND MODALS */}
 
       {/* LINE CLAIM MODAL */}
-      <Dialog open={lineModalOpen} onOpenChange={setLineModalOpen}>
+      <Dialog open={lineModalOpen} onOpenChange={(open) => {
+        if (!isSavingLine) {
+          setLineModalOpen(open);
+          if (!open) {
+            setIsSavingLine(false);
+            setSaveProgress(0);
+            setLineSaveComplete(false);
+            setWinnerName("");
+            setCardSeries("");
+            setCardSerial("");
+            setWinnerNotes("");
+          }
+        }
+      }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Reclamación de Línea</DialogTitle>
-            <DialogDescription>Completa los datos del ganador de la línea.</DialogDescription>
+            <DialogDescription>
+              {lineSaveComplete 
+                ? "Línea guardada con éxito."
+                : isSavingLine 
+                  ? "Guardando los datos en el sistema..." 
+                  : "Completa los datos del ganador de la línea."}
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 pt-4">
-            <div>
-              <label className="block text-xs font-semibold text-text-secondary mb-1">Nombre del Ganador *</label>
-              <input
-                type="text"
-                required
-                value={winnerName}
-                onChange={(e) => setWinnerName(e.target.value)}
-                className="w-full h-11 px-4 bg-app-background border border-border rounded-xl text-text-primary text-sm focus:outline-none"
-              />
+
+          {/* Case 1: Saving progress loader */}
+          {isSavingLine && (
+            <div className="py-8 flex flex-col items-center space-y-4">
+              <span className="text-sm font-semibold text-text-secondary animate-pulse">Guardando ganador de línea...</span>
+              <div className="w-full bg-panel border border-border h-4 rounded-full overflow-hidden">
+                <div 
+                  className="bg-primary h-full transition-all duration-75 ease-out shadow-[0_0_10px_rgba(139,92,246,0.6)]"
+                  style={{ width: `${saveProgress}%` }}
+                />
+              </div>
+              <span className="text-xs text-text-muted">{Math.round(saveProgress)}%</span>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+          )}
+
+          {/* Case 2: Save complete */}
+          {lineSaveComplete && (
+            <div className="py-6 flex flex-col items-center space-y-6 text-center">
+              <div className="w-12 h-12 bg-success/10 border border-success/30 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.4)]">
+                <Trophy className="w-6 h-6 text-success animate-bounce" />
+              </div>
               <div>
-                <label className="block text-xs font-semibold text-text-secondary mb-1">Serie del Cartón</label>
+                <h4 className="font-bold font-tech text-text-primary text-base">¡LÍNEA REGISTRADA!</h4>
+                <p className="text-xs text-text-secondary mt-1">El ganador ha sido guardado de forma segura.</p>
+              </div>
+              <button
+                onClick={async () => {
+                  setLineModalOpen(false);
+                  setIsSavingLine(false);
+                  setLineSaveComplete(false);
+                  setWinnerName("");
+                  setCardSeries("");
+                  setCardSerial("");
+                  setWinnerNotes("");
+                  await resumeGame();
+                }}
+                className="w-full py-3 bg-success hover:bg-success/90 text-text-primary rounded-xl font-bold font-tech text-xs tracking-wider transition-colors shadow-[0_0_15px_rgba(34,197,94,0.3)] cursor-pointer"
+              >
+                CONTINUAR PARTIDA
+              </button>
+            </div>
+          )}
+
+          {/* Case 3: Form */}
+          {!isSavingLine && !lineSaveComplete && (
+            <div className="space-y-4 pt-4">
+              <div>
+                <label className="block text-xs font-semibold text-text-secondary mb-1">Nombre del Ganador *</label>
                 <input
                   type="text"
-                  value={cardSeries}
-                  onChange={(e) => setCardSeries(e.target.value)}
+                  required
+                  value={winnerName}
+                  onChange={(e) => setWinnerName(e.target.value)}
                   className="w-full h-11 px-4 bg-app-background border border-border rounded-xl text-text-primary text-sm focus:outline-none"
                 />
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-text-secondary mb-1">Serie del Cartón</label>
+                  <input
+                    type="text"
+                    value={cardSeries}
+                    onChange={(e) => setCardSeries(e.target.value)}
+                    className="w-full h-11 px-4 bg-app-background border border-border rounded-xl text-text-primary text-sm focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-text-secondary mb-1">Número de Serial</label>
+                  <input
+                    type="text"
+                    value={cardSerial}
+                    onChange={(e) => setCardSerial(e.target.value)}
+                    className="w-full h-11 px-4 bg-app-background border border-border rounded-xl text-text-primary text-sm focus:outline-none"
+                  />
+                </div>
+              </div>
               <div>
-                <label className="block text-xs font-semibold text-text-secondary mb-1">Número de Serial</label>
-                <input
-                  type="text"
-                  value={cardSerial}
-                  onChange={(e) => setCardSerial(e.target.value)}
-                  className="w-full h-11 px-4 bg-app-background border border-border rounded-xl text-text-primary text-sm focus:outline-none"
+                <label className="block text-xs font-semibold text-text-secondary mb-1">Notas Adicionales</label>
+                <textarea
+                  value={winnerNotes}
+                  onChange={(e) => setWinnerNotes(e.target.value)}
+                  className="w-full h-20 p-3 bg-app-background border border-border rounded-xl text-text-primary text-sm focus:outline-none resize-none"
                 />
               </div>
+              <button
+                onClick={() => handleRegisterWinner("LINE")}
+                className="w-full py-3 bg-primary text-text-primary rounded-xl font-bold font-tech text-xs tracking-wider hover:bg-primary-strong transition-colors cursor-pointer"
+              >
+                CONFIRMAR GANADOR DE LÍNEA
+              </button>
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-text-secondary mb-1">Notas Adicionales</label>
-              <textarea
-                value={winnerNotes}
-                onChange={(e) => setWinnerNotes(e.target.value)}
-                className="w-full h-20 p-3 bg-app-background border border-border rounded-xl text-text-primary text-sm focus:outline-none resize-none"
-              />
-            </div>
-            <button
-              onClick={() => handleRegisterWinner("LINE")}
-              className="w-full py-3 bg-primary text-text-primary rounded-xl font-bold font-tech text-xs tracking-wider hover:bg-primary-strong transition-colors"
-            >
-              CONFIRMAR GANADOR DE LÍNEA
-            </button>
-          </div>
+          )}
         </DialogContent>
       </Dialog>
 
@@ -584,6 +684,44 @@ export const ConsolePage: React.FC = () => {
               className="w-full py-3 bg-danger text-text-primary rounded-xl font-bold font-tech text-xs tracking-wider hover:bg-danger/90 transition-colors"
             >
               EFECTUAR ANULACIÓN
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* GAME FINISHED DIALOG */}
+      <Dialog open={gameFinishedModalOpen} onOpenChange={setGameFinishedModalOpen}>
+        <DialogContent className="text-center p-8 space-y-6">
+          <div className="mx-auto w-16 h-16 bg-success/10 border border-success/30 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)]">
+            <Trophy className="w-8 h-8 text-success animate-bounce" />
+          </div>
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold font-tech text-text-primary text-center">
+              ¡PARTIDA FINALIZADA!
+            </DialogTitle>
+            <DialogDescription className="text-text-secondary text-center">
+              El Bingo ha sido registrado con éxito y la partida ha concluido. ¿Qué deseas hacer a continuación?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
+            <button
+              onClick={async () => {
+                setGameFinishedModalOpen(false);
+                await discardSession();
+                navigate("/");
+              }}
+              className="flex-1 py-3 bg-success hover:bg-success/90 text-text-primary rounded-xl font-bold font-tech text-xs tracking-wider transition-colors shadow-[0_0_15px_rgba(34,197,94,0.3)] cursor-pointer"
+            >
+              GENERAR PARTIDA NUEVA
+            </button>
+            <button
+              onClick={async () => {
+                setGameFinishedModalOpen(false);
+                navigate("/");
+              }}
+              className="flex-1 py-3 bg-panel-elevated hover:bg-panel border border-border text-text-primary rounded-xl font-bold font-tech text-xs tracking-wider transition-colors cursor-pointer"
+            >
+              IR AL HOME
             </button>
           </div>
         </DialogContent>

@@ -42,18 +42,28 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-              className="pointer-events-auto flex items-center justify-between p-4 rounded-xl glass-panel-elevated border border-border-subtle shadow-xl w-full"
+              className={`pointer-events-auto flex items-center justify-between p-4 rounded-xl glass-panel-elevated border shadow-2xl w-full transition-all duration-300 ${
+                toast.type === "success" ? "border-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.35)]" :
+                toast.type === "error" ? "border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.35)]" :
+                toast.type === "warning" ? "border-yellow-500/50 shadow-[0_0_20px_rgba(245,158,11,0.35)]" :
+                "border-sky-500/50 shadow-[0_0_20px_rgba(56,189,248,0.35)]"
+              }`}
             >
               <div className="flex items-center gap-3">
-                {toast.type === "success" && <CheckCircle className="w-5 h-5 text-success" />}
-                {toast.type === "error" && <AlertCircle className="w-5 h-5 text-danger animate-pulse" />}
-                {toast.type === "warning" && <AlertCircle className="w-5 h-5 text-warning" />}
-                {toast.type === "info" && <Info className="w-5 h-5 text-info" />}
-                <span className="text-sm font-medium text-text-primary">{toast.message}</span>
+                {toast.type === "success" && <CheckCircle className="w-5 h-5 text-green-500 filter drop-shadow-[0_0_3px_rgba(34,197,94,0.8)]" />}
+                {toast.type === "error" && <AlertCircle className="w-5 h-5 text-red-500 filter drop-shadow-[0_0_3px_rgba(239,68,68,0.8)] animate-pulse" />}
+                {toast.type === "warning" && <AlertCircle className="w-5 h-5 text-yellow-500 filter drop-shadow-[0_0_3px_rgba(245,158,11,0.8)]" />}
+                {toast.type === "info" && <Info className="w-5 h-5 text-sky-500 filter drop-shadow-[0_0_3px_rgba(56,189,248,0.8)]" />}
+                <span className={`text-sm font-tech font-bold tracking-wide ${
+                  toast.type === "success" ? "text-green-400" :
+                  toast.type === "error" ? "text-red-400" :
+                  toast.type === "warning" ? "text-yellow-400" :
+                  "text-sky-400"
+                }`}>{toast.message}</span>
               </div>
               <button
                 onClick={() => removeToast(toast.id)}
-                className="text-text-muted hover:text-text-secondary transition-colors"
+                className="text-text-muted hover:text-text-secondary transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>

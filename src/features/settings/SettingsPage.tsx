@@ -11,7 +11,6 @@ export const SettingsPage: React.FC = () => {
   const updateSettings = useGameStore((state) => state.updateSettings);
 
   // Fallback states if no active session
-  const [operatorName, setOperatorName] = useState("");
   const [drawMode, setDrawMode] = useState<"MANUAL" | "SEMI_AUTOMATIC" | "AUTOMATIC">("MANUAL");
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [voiceRate, setVoiceRate] = useState(0.95);
@@ -21,7 +20,6 @@ export const SettingsPage: React.FC = () => {
   // Sync component states with store session
   useEffect(() => {
     if (session) {
-      setOperatorName(session.settings.operatorName);
       setDrawMode(session.settings.mode);
       setVoiceEnabled(session.settings.voiceEnabled);
       setVoiceRate(session.settings.voiceRate);
@@ -35,7 +33,6 @@ export const SettingsPage: React.FC = () => {
     if (!session) return;
 
     await updateSettings({
-      operatorName,
       mode: drawMode,
       voiceEnabled,
       voiceRate,
@@ -73,21 +70,6 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       <form onSubmit={handleSave} className="glass-panel p-6 rounded-2xl space-y-6">
-        {/* Operator Profile */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-bold font-tech text-primary border-b border-border pb-1.5">Perfil de Operación</h3>
-          <div>
-            <label className="block text-xs font-semibold text-text-secondary mb-1.5">Nombre del Operador</label>
-            <input
-              type="text"
-              required
-              value={operatorName}
-              onChange={(e) => setOperatorName(e.target.value)}
-              className="w-full h-11 px-4 bg-app-background-soft border border-border rounded-xl text-text-primary text-sm focus:outline-none focus:border-primary"
-            />
-          </div>
-        </div>
-
         {/* Draw Mode Live Adjust */}
         <div className="space-y-4">
           <h3 className="text-sm font-bold font-tech text-primary border-b border-border pb-1.5">Modo de Extracción</h3>
@@ -99,7 +81,7 @@ export const SettingsPage: React.FC = () => {
                 onClick={() => setDrawMode(m)}
                 className={`py-2 px-3 border rounded-xl text-xs font-semibold font-tech transition-all ${
                   drawMode === m
-                    ? "bg-primary/10 border-primary text-primary"
+                    ? "bg-green-500/10 border-green-500 text-green-500"
                     : "bg-app-background-soft border-border text-text-secondary hover:text-text-primary"
                 }`}
               >
