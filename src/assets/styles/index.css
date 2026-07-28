@@ -67,3 +67,19 @@
     box-shadow: none !important;
   }
 }
+
+/* Toast progress bar keyframes */
+@keyframes toast-progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-toast-progress {
+  animation-name: toast-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
