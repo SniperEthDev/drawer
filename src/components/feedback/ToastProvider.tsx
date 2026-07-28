@@ -42,7 +42,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-              className={`pointer-events-auto flex items-center justify-between p-4 rounded-xl glass-panel-elevated border shadow-2xl w-full transition-all duration-300 ${
+              className={`relative overflow-hidden pointer-events-auto flex items-center justify-between p-4 pb-5 rounded-xl glass-panel-elevated border shadow-2xl w-full transition-all duration-300 ${
                 toast.type === "success" ? "border-green-500/50 shadow-[0_0_20px_rgba(34,197,94,0.35)]" :
                 toast.type === "error" ? "border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.35)]" :
                 toast.type === "warning" ? "border-yellow-500/50 shadow-[0_0_20px_rgba(245,158,11,0.35)]" :
@@ -67,6 +67,19 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
               >
                 <X className="w-4 h-4" />
               </button>
+
+              {/* Draining progress bar at the bottom */}
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/5 overflow-hidden">
+                <div 
+                  className={`h-full animate-toast-progress ${
+                    toast.type === "success" ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]" :
+                    toast.type === "error" ? "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" :
+                    toast.type === "warning" ? "bg-yellow-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]" :
+                    "bg-sky-500 shadow-[0_0_8px_rgba(56,189,248,0.8)]"
+                  }`}
+                  style={{ animationDuration: "4000ms" }}
+                />
+              </div>
             </motion.div>
           ))}
         </AnimatePresence>

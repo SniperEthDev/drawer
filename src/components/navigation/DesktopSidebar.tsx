@@ -5,6 +5,8 @@ import { cn } from "../../lib/cn";
 import { useGameStore } from "../../store/useGameStore";
 
 export const DesktopSidebar: React.FC = () => {
+
+
   const location = useLocation();
   const navigate = useNavigate();
   const session = useGameStore((state) => state.session);
