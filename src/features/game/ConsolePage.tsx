@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { useNavigate } from "react-router-dom";
-import { Play, Pause, RotateCw, Trophy, ShieldAlert, Volume2, Search, X } from "lucide-react";
+import { Play, Pause, RotateCw, Trophy, Volume2, Search, X } from "lucide-react";
 import { BallSphere } from "../../components/ui/BallSphere";
 import { CountdownRing } from "../../components/ui/CountdownRing";
 import { AutoDrawScheduler } from "../../services/scheduler/AutoDrawScheduler";
@@ -17,7 +17,6 @@ export const ConsolePage: React.FC = () => {
   const drawNextBall = useGameStore((state) => state.drawNextBall);
   const pauseGame = useGameStore((state) => state.pauseGame);
   const resumeGame = useGameStore((state) => state.resumeGame);
-  const revokeLastBall = useGameStore((state) => state.revokeLastBall);
   const announceCurrentBall = useGameStore((state) => state.announceCurrentBall);
   const registerWinner = useGameStore((state) => state.registerWinner);
   const finishSession = useGameStore((state) => state.finishSession);
@@ -32,7 +31,6 @@ export const ConsolePage: React.FC = () => {
   // Dialog states
   const [lineModalOpen, setLineModalOpen] = useState(false);
   const [bingoModalOpen, setBingoModalOpen] = useState(false);
-  const [revokeModalOpen, setRevokeModalOpen] = useState(false);
 
   // States for Line save simulator & Bingo finished dialog
   const [isSavingLine, setIsSavingLine] = useState(false);
@@ -46,11 +44,6 @@ export const ConsolePage: React.FC = () => {
   const [cardSeries, setCardSeries] = useState("");
   const [cardSerial, setCardSerial] = useState("");
   const [winnerNotes, setWinnerNotes] = useState("");
-  const [revokeReason, setRevokeReason] = useState("");
-
-  // Revoke button hold interaction
-  const [isHoldingRevoke, setIsHoldingRevoke] = useState(false);
-  const holdTimerRef = useRef<any>(null);
 
   useEffect(() => {
     if (!session) {
@@ -110,34 +103,6 @@ export const ConsolePage: React.FC = () => {
     }
   };
 
-  // Revoke long-press interactions
-  const startRevokeHold = () => {
-    setIsHoldingRevoke(true);
-    holdTimerRef.current = setTimeout(() => {
-      setIsHoldingRevoke(false);
-      setRevokeModalOpen(true);
-    }, 1500); // 1.5 second hold
-  };
-
-  const endRevokeHold = () => {
-    if (holdTimerRef.current) {
-      clearTimeout(holdTimerRef.current);
-      holdTimerRef.current = null;
-    }
-    setIsHoldingRevoke(false);
-  };
-
-  const handleConfirmRevoke = async () => {
-    if (!revokeReason.trim()) {
-      showToast("El motivo de anulación es obligatorio.", "warning");
-      return;
-    }
-    if (lastBall) {
-      await revokeLastBall(revokeReason);
-      setRevokeReason("");
-      setRevokeModalOpen(false);
-      showToast(`Bola ${lastBall.letter}${lastBall.number} anulada con éxito`, "success");
-    }
   };
 
   const handleRegisterWinner = async (type: "LINE" | "BINGO") => {
@@ -378,22 +343,6 @@ export const ConsolePage: React.FC = () => {
               >
                 <Trophy className="w-4 h-4" /> RECLAMAR BINGO
               </button>
-
-              {/* ANULACIÓN (Hold to Trigger) */}
-              {lastBall && (
-                <button
-                  onMouseDown={startRevokeHold}
-                  onMouseUp={endRevokeHold}
-                  onMouseLeave={endRevokeHold}
-                  onTouchStart={startRevokeHold}
-                  onTouchEnd={endRevokeHold}
-                  className={`col-span-2 py-3 bg-danger/10 border border-danger/20 text-danger rounded-xl font-bold font-tech text-xs tracking-wider flex items-center justify-center gap-1.5 transition-all duration-200 select-none ${
-                    isHoldingRevoke ? "bg-danger/30 scale-95" : "hover:bg-danger/20"
-                  }`}
-                >
-                  <X className="w-4 h-4" /> {isHoldingRevoke ? "Mantenlo pulsado..." : "ANULAR ÚLTIMA BOLA (Mantener)"}
-                </button>
-              )}
             </div>
           </section>
         )}
@@ -652,38 +601,6 @@ export const ConsolePage: React.FC = () => {
               className="w-full py-3 bg-success text-text-primary rounded-xl font-bold font-tech text-xs tracking-wider hover:bg-success/90 transition-colors"
             >
               CONFIRMAR GANADOR DE BINGO
-            </button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* BALL REVOKE CONFIRMATION MODAL */}
-      <Dialog open={revokeModalOpen} onOpenChange={setRevokeModalOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="text-danger flex items-center gap-2">
-              <ShieldAlert className="w-5 h-5" /> Anular Última Bola
-            </DialogTitle>
-            <DialogDescription>
-              La bola {lastBall?.letter}{lastBall?.number} permanecerá en el registro de auditoría, pero dejará de considerarse válida para reclamar premios.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 pt-4">
-            <div>
-              <label className="block text-xs font-semibold text-text-secondary mb-1">Motivo de Anulación *</label>
-              <textarea
-                required
-                placeholder="Ej. Bola extraída por error, desajuste mecánico, etc."
-                value={revokeReason}
-                onChange={(e) => setRevokeReason(e.target.value)}
-                className="w-full h-24 p-3 bg-app-background border border-border rounded-xl text-text-primary text-sm focus:outline-none resize-none"
-              />
-            </div>
-            <button
-              onClick={handleConfirmRevoke}
-              className="w-full py-3 bg-danger text-text-primary rounded-xl font-bold font-tech text-xs tracking-wider hover:bg-danger/90 transition-colors"
-            >
-              EFECTUAR ANULACIÓN
             </button>
           </div>
         </DialogContent>

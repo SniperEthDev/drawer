@@ -37,7 +37,7 @@ export const DesktopSidebar: React.FC = () => {
       <div className="p-6 border-b border-border flex flex-col items-center gap-2 text-center">
         <img src="/brand/logo-bulltech-white.webp" alt="BULLTECH Logo" className="w-60 h-auto object-contain" />
         <div className="flex flex-col items-center">
-          <h1 className="text-sm font-bold tracking-wider font-tech text-text-primary">SORTEADOR</h1>
+          <h1 className="text-sm font-bold tracking-wider font-tech text-text-primary">SORTEADOR BULLTECH</h1>
         </div>
       </div>
 

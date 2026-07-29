@@ -17,7 +17,7 @@ export const HelpPage: React.FC = () => {
         <h1 className="text-2xl font-bold font-tech text-text-primary flex items-center gap-2">
           <HelpCircle className="w-6 h-6 text-primary" /> MANUAL DE AYUDA Y ATAJOS
         </h1>
-        <p className="text-text-secondary text-xs">Instrucciones de operación de BULLTECH DRAWER y atajos de teclado rápidos.</p>
+        <p className="text-text-secondary text-xs">Instrucciones de operación de SORTEADOR BULLTECH y atajos de teclado rápidos.</p>
       </div>
 
       {/* Keyboard Shortcuts */}
@@ -65,7 +65,7 @@ export const HelpPage: React.FC = () => {
         <div>
           <h4 className="font-bold text-text-primary mb-1">Aviso Regulatorio Obligatorio</h4>
           <p>
-            BULLTECH DRAWER es una herramienta operativa para sorteos de bingo. La aleatoriedad utiliza las capacidades criptográficas del navegador y mantiene un registro local de auditoría. Esto no implica certificación regulatoria. Para actividades con dinero real, premios regulados o explotación comercial, el operador debe comprobar y cumplir la legislación aplicable y los requisitos de certificación de su jurisdicción.
+            SORTEADOR BULLTECH es una herramienta operativa para sorteos de bingo. La aleatoriedad utiliza las capacidades criptográficas del navegador y mantiene un registro local de auditoría. Esto no implica certificación regulatoria. Para actividades con dinero real, premios regulados o explotación comercial, el operador debe comprobar y cumplir la legislación aplicable y los requisitos de certificación de su jurisdicción.
           </p>
         </div>
       </section>

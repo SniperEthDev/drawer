@@ -110,7 +110,7 @@ export const SetupPage: React.FC = () => {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="text-center">
-        <h1 className="text-3xl font-extrabold font-tech text-text-primary tracking-wide mb-2">BULLTECH DRAWER</h1>
+        <h1 className="text-3xl font-extrabold font-tech text-text-primary tracking-wide mb-2">SORTEADOR BULLTECH</h1>
         <p className="text-text-secondary text-sm">Configura la partida de bingo de 75 bolas antes de iniciar el sorteo.</p>
       </div>
 
@@ -367,7 +367,7 @@ export const SetupPage: React.FC = () => {
           <ShieldAlert className="w-5 h-5 text-primary shrink-0 mt-0.5" />
           <p>
             <strong>Aviso de Privacidad y Operación:</strong> Todos los datos de esta partida se procesan y almacenan únicamente en este dispositivo.
-            BULLTECH DRAWER no realiza transacciones de apuestas ni sube información a servidores remotos.
+            SORTEADOR BULLTECH no realiza transacciones de apuestas ni sube información a servidores remotos.
           </p>
         </div>
 
