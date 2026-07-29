@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useGameStore } from "../../store/useGameStore";
 import { useNavigate } from "react-router-dom";
 import { Play, Pause, RotateCw, Trophy, Volume2, Search, X } from "lucide-react";
