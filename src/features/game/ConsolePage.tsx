@@ -103,8 +103,6 @@ export const ConsolePage: React.FC = () => {
     }
   };
 
-  };
-
   const handleRegisterWinner = async (type: "LINE" | "BINGO") => {
     if (!winnerName.trim()) {
       showToast("El nombre del ganador es obligatorio.", "warning");
